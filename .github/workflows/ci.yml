@@ -45,16 +45,20 @@ jobs:
         conan install . --output-folder=build --build=missing -s build_type=Release -s compiler.cppstd=23 -s compiler=gcc -s compiler.version=13
     
     - name: Configure CMake
-      working-directory: example
       run: |
         cmake --preset conan-release
     
     - name: Build
-      working-directory: example
       run: |
         cmake --build --preset conan-release
     
     - name: Run example
-      working-directory: build
       run: |
-        ./example
+        EXAMPLE_PATH=$(find build -name example -type f -executable | head -1)
+        if [ -z "$EXAMPLE_PATH" ]; then
+          echo "Error: Could not find example executable in build directory"
+          find build -type f -name "example*" || true
+          exit 1
+        fi
+        echo "Running example from: $EXAMPLE_PATH"
+        "$EXAMPLE_PATH"
