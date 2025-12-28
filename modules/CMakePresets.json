@@ -1,0 +1,47 @@
+{
+    "version": 3,
+    "vendor": {
+        "conan": {}
+    },
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 28,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "modules-debug",
+            "displayName": "'modules-debug' config",
+            "description": "'modules-debug' configure using 'Ninja' generator",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "binaryDir": "${sourceDir}/../build-modules-debug"
+        },
+        {
+            "name": "modules-release",
+            "displayName": "'modules-release' config",
+            "description": "'modules-release' configure using 'Ninja' generator",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW",
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "binaryDir": "${sourceDir}/../build-modules"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "modules-debug",
+            "configurePreset": "modules-debug",
+            "jobs": 11
+        },
+        {
+            "name": "modules-release",
+            "configurePreset": "modules-release",
+            "jobs": 11
+        }
+    ]
+}
