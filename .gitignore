@@ -3,6 +3,7 @@ maelstrom
 
 .vscode
 build/
+build-debug/
 
 .cache/
 .clangd
