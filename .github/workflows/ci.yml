@@ -34,15 +34,24 @@ jobs:
         pip3 install --upgrade pip
         pip3 install conan
     
+    - name: Cache Conan packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.conan2
+        key: conan-${{ runner.os }}-gcc13-gnu20-${{ hashFiles('conanfile.txt') }}
+        restore-keys: |
+          conan-${{ runner.os }}-gcc13-gnu20-
+          conan-${{ runner.os }}-gcc13-
+
     - name: Configure Conan profile
       run: |
         conan profile detect --force
         # Set C++ compiler to GCC-13
         conan profile show default
-    
+
     - name: Install dependencies with Conan
       run: |
-        conan install . --output-folder=build --build=missing -s build_type=Release -s compiler.cppstd=23 -s compiler=gcc -s compiler.version=13
+        conan install . --output-folder=build --build=missing -s build_type=Release -s compiler.cppstd=gnu20 -s compiler=gcc -s compiler.version=13
     
     - name: Configure CMake
       working-directory: example
