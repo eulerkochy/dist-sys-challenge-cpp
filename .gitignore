@@ -1,0 +1,9 @@
+# Maelstrom binary and dependencies
+maelstrom
+
+.vscode
+build/
+build-debug/
+
+.cache/
+.clangd
