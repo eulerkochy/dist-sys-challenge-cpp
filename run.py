@@ -29,7 +29,7 @@ def main() -> None:
     parser.add_argument("--time-limit", type=int, default=10, help="Time limit in seconds (default: 10)")
     parser.add_argument("--compiler", type=str, help="Compiler to use (e.g., gcc)")
     parser.add_argument("--compiler-version", type=str, help="Compiler version (e.g., 13)")
-    parser.add_argument("--cppstd", type=str, default="23", help="C++ standard version (default: 23)")
+    parser.add_argument("--cppstd", type=str, help="C++ standard version (e.g., 23)")
     args = parser.parse_args()
 
     # Validate compiler arguments
@@ -46,8 +46,10 @@ def main() -> None:
         f"--output-folder={build_dir}",
         "--build=missing",
         "-s", f"build_type={build_type}",
-        "-s", f"compiler.cppstd={args.cppstd}",
         "-c", "tools.cmake.cmaketoolchain:generator=Ninja"]
+    
+    if args.cppstd:
+        conan_cmd.extend(["-s", f"compiler.cppstd={args.cppstd}"])
     
     if args.compiler and args.compiler_version:
         conan_cmd.extend([

@@ -51,4 +51,4 @@ jobs:
     
     - name: Build and test echo workload
       run: |
-        python3 run.py echo --node-count 1 --time-limit 10 --compiler gcc --compiler-version 13
+        python3 run.py echo --node-count 1 --time-limit 10 --compiler gcc --compiler-version 13 --cppstd 23
