@@ -32,6 +32,10 @@ def main() -> None:
     parser.add_argument("--cppstd", type=str, default="23", help="C++ standard version (default: 23)")
     args = parser.parse_args()
 
+    # Validate compiler arguments
+    if (args.compiler and not args.compiler_version) or (args.compiler_version and not args.compiler):
+        parser.error("--compiler and --compiler-version must be specified together")
+
     build_type = "Debug" if args.debug else "Release"
     preset = "conan-debug" if args.debug else "conan-release"
     build_dir = "build-debug" if args.debug else "build"
