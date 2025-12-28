@@ -27,6 +27,9 @@ def main() -> None:
     parser.add_argument("--build-only", action="store_true", help="Only build, don't run tests")
     parser.add_argument("--node-count", type=int, default=1, help="Number of nodes (default: 1)")
     parser.add_argument("--time-limit", type=int, default=10, help="Time limit in seconds (default: 10)")
+    parser.add_argument("--compiler", type=str, help="Compiler to use (e.g., gcc)")
+    parser.add_argument("--compiler-version", type=str, help="Compiler version (e.g., 13)")
+    parser.add_argument("--cppstd", type=str, default="23", help="C++ standard version (default: 23)")
     args = parser.parse_args()
 
     build_type = "Debug" if args.debug else "Release"
@@ -35,11 +38,19 @@ def main() -> None:
 
     # Conan install
     print(f"Installing dependencies ({build_type})...")
-    run(["conan", "install", ".",
+    conan_cmd = ["conan", "install", ".",
         f"--output-folder={build_dir}",
         "--build=missing",
         "-s", f"build_type={build_type}",
-        "-c", "tools.cmake.cmaketoolchain:generator=Ninja"])
+        "-s", f"compiler.cppstd={args.cppstd}",
+        "-c", "tools.cmake.cmaketoolchain:generator=Ninja"]
+    
+    if args.compiler:
+        conan_cmd.extend(["-s", f"compiler={args.compiler}"])
+    if args.compiler_version:
+        conan_cmd.extend(["-s", f"compiler.version={args.compiler_version}"])
+    
+    run(conan_cmd)
 
     # Clean stale CMake cache and build
     clean_cmake_cache(build_dir)
