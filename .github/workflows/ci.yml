@@ -45,16 +45,13 @@ jobs:
         conan install . --output-folder=build --build=missing -s build_type=Release -s compiler.cppstd=23 -s compiler=gcc -s compiler.version=13
     
     - name: Configure CMake
-      working-directory: example
       run: |
         cmake --preset conan-release
     
     - name: Build
-      working-directory: example
       run: |
         cmake --build --preset conan-release
     
     - name: Run example
-      working-directory: build
       run: |
-        ./example
+        find build -name example -type f -executable | head -1 | xargs -I {} {}
