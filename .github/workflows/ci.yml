@@ -27,7 +27,10 @@ jobs:
           ninja-build \
           python3 \
           python3-pip \
-          g++-13
+          g++-13 \
+          openjdk-21-jre \
+          graphviz \
+          gnuplot
     
     - name: Install Conan
       run: |
@@ -40,25 +43,12 @@ jobs:
         # Set C++ compiler to GCC-13
         conan profile show
     
-    - name: Install dependencies with Conan
+    - name: Setup Maelstrom
       run: |
-        conan install . --output-folder=build --build=missing -s build_type=Release -s compiler.cppstd=23 -s compiler=gcc -s compiler.version=13
+        wget https://github.com/jepsen-io/maelstrom/releases/download/v0.2.4/maelstrom.tar.bz2
+        tar -xjf maelstrom.tar.bz2
+        rm maelstrom.tar.bz2
     
-    - name: Configure CMake
+    - name: Build and test echo workload
       run: |
-        cmake --preset conan-release
-    
-    - name: Build
-      run: |
-        cmake --build --preset conan-release
-    
-    - name: Run example
-      run: |
-        EXAMPLE_PATH=$(find build -name example -type f -executable | head -1)
-        if [ -z "$EXAMPLE_PATH" ]; then
-          echo "Error: Could not find example executable in build directory"
-          find build -type f -name "example*" || true
-          exit 1
-        fi
-        echo "Running example from: $EXAMPLE_PATH"
-        "$EXAMPLE_PATH"
+        python3 run.py echo --node-count 1 --time-limit 10 --compiler gcc --compiler-version 13 --cppstd 23
