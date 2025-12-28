@@ -38,7 +38,7 @@ jobs:
       run: |
         conan profile detect --force
         # Set C++ compiler to GCC-13
-        conan profile show default
+        conan profile show
     
     - name: Install dependencies with Conan
       run: |
