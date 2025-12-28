@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
-# Use GCC 15
-set(CMAKE_CXX_COMPILER /opt/homebrew/bin/g++-15 CACHE FILEPATH "C++ compiler")
+# Use GCC 15 on macOS if available, otherwise use system default
+if(APPLE AND EXISTS /opt/homebrew/bin/g++-15)
+    set(CMAKE_CXX_COMPILER /opt/homebrew/bin/g++-15 CACHE FILEPATH "C++ compiler")
+endif()
 
 # Generate compile_commands.json for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
