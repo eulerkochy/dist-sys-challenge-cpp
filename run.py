@@ -49,10 +49,11 @@ def main() -> None:
         "-s", f"compiler.cppstd={args.cppstd}",
         "-c", "tools.cmake.cmaketoolchain:generator=Ninja"]
     
-    if args.compiler:
-        conan_cmd.extend(["-s", f"compiler={args.compiler}"])
-    if args.compiler_version:
-        conan_cmd.extend(["-s", f"compiler.version={args.compiler_version}"])
+    if args.compiler and args.compiler_version:
+        conan_cmd.extend([
+            "-s", f"compiler={args.compiler}",
+            "-s", f"compiler.version={args.compiler_version}"
+        ])
     
     run(conan_cmd)
 
